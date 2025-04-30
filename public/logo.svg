@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="512" height="512" rx="100" fill="#3B82F6"/>
+  
+  <!-- Notepad base -->
+  <rect x="96" y="64" width="320" height="384" rx="24" fill="white"/>
+  
+  <!-- Notepad lines -->
+  <rect x="136" y="160" width="240" height="8" rx="4" fill="#E5E7EB"/>
+  <rect x="136" y="200" width="240" height="8" rx="4" fill="#E5E7EB"/>
+  <rect x="136" y="240" width="240" height="8" rx="4" fill="#E5E7EB"/>
+  <rect x="136" y="280" width="240" height="8" rx="4" fill="#E5E7EB"/>
+  <rect x="136" y="320" width="240" height="8" rx="4" fill="#E5E7EB"/>
+  <rect x="136" y="360" width="160" height="8" rx="4" fill="#E5E7EB"/>
+  
+  <!-- Notepad top with binding -->
+  <path d="M96 88C96 74.7452 106.745 64 120 64H392C405.255 64 416 74.7452 416 88V112H96V88Z" fill="#3B82F6"/>
+  
+  <!-- Binding holes -->
+  <circle cx="136" cy="88" r="8" fill="white"/>
+  <circle cx="176" cy="88" r="8" fill="white"/>
+  <circle cx="216" cy="88" r="8" fill="white"/>
+  <circle cx="256" cy="88" r="8" fill="white"/>
+  <circle cx="296" cy="88" r="8" fill="white"/>
+  <circle cx="336" cy="88" r="8" fill="white"/>
+  <circle cx="376" cy="88" r="8" fill="white"/>
+  
+  <!-- Pencil -->
+  <path d="M336 160L376 120L392 136L352 176L336 160Z" fill="#F59E0B"/>
+  <path d="M336 160L328 184L352 176L336 160Z" fill="#D97706"/>
+  <path d="M376 120L392 136L400 128L384 112L376 120Z" fill="#78350F"/>
+</svg>
