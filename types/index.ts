@@ -4,6 +4,7 @@ export type NoteType = {
     id: string;
     note: string;
     timestamp: string;
+    userId: string;
 }
 export type ChangeType = {
     del_id :string,
@@ -11,6 +12,6 @@ export type ChangeType = {
 }
 export interface ChangeContextType {
     change: ChangeType | undefined ,
-    setChange: Dispatch<SetStateAction<ChangeType | undefined>> 
+    setChange: Dispatch<SetStateAction<ChangeType | undefined>>
   }
 

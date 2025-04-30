@@ -21,7 +21,22 @@ export default function Edit({id}:{id:string}) {
                 headers: {"Content-Type": "application/json"}
             });
 
+            if (!res.ok) {
+                if (res.status === 401) {
+                    console.error("Unauthorized: You need to be signed in to edit notes");
+                } else {
+                    console.error("Failed to fetch notes");
+                }
+                return;
+            }
+
             const data = await res.json();
+
+            if (data.error) {
+                console.error("Error:", data.error);
+                return;
+            }
+
             const dataToEdit = data.notes.find((note: NoteType) => note.id === id);
 
             setEditableData(dataToEdit || null);
@@ -47,11 +62,27 @@ export default function Edit({id}:{id:string}) {
                 body: JSON.stringify({id, note: editableData})
             });
 
-            if (res.ok) {
+            if (!res.ok) {
+                if (res.status === 401) {
+                    console.error("Unauthorized: You need to be signed in to update notes");
+                } else {
+                    console.error("Failed to update note");
+                }
+                return;
+            }
+
+            const data = await res.json();
+
+            if (data.error) {
+                console.error("Error:", data.error);
+                return;
+            }
+
+            if (data.success) {
                 setChange({del_id: '0', edit_id: id});
                 setModalOpen(false);
             } else {
-                console.error("Failed to update note");
+                console.error("Failed to update note:", data.message);
             }
         } catch (error) {
             console.error("Error updating note:", error);

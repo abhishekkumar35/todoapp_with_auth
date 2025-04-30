@@ -19,10 +19,17 @@ function LoadDB() {
 }
 
 
-function GetNotesJsonDB() {
+function GetNotesJsonDB(userId) {
   try {
-    const data = LoadDB()
-   return data
+    const data = LoadDB();
+
+    // If userId is provided, filter notes by userId
+    if (userId) {
+      const filteredNotes = data.notes.filter(note => note.userId === userId);
+      return { notes: filteredNotes };
+    }
+
+    return data;
   } catch (error) {
     return { error: error.toString() }
   }
@@ -30,57 +37,67 @@ function GetNotesJsonDB() {
 
 function AddNoteJsonDB(note) {
   try {
-    const data = LoadDB()
+    if (!note.userId) {
+      return { error: "User ID is required" };
+    }
+
+    const data = LoadDB();
     const id = data.notes.length + 1;
-    const newNote = { id: id, ...note }
+    const newNote = { id: id.toString(), ...note };
     data.notes.push(newNote);
 
     saveDB(data);
 
-    return { success: true, message: `Note ${note} added successfully` };
+    return { success: true, message: `Note added successfully`, note: newNote };
   } catch (error) {
     return { error: error.toString() }
   }
 }
 
-function DeleteNoteJsonDB(id) {
+function DeleteNoteJsonDB(id, userId) {
   try {
-    const data = LoadDB()
-    const index = data.notes.findIndex(note => note.id === id);
+    const data = LoadDB();
+    const index = data.notes.findIndex(note => note.id === id && note.userId === userId);
+
     if (index === -1) {
-      return { error: `Note with id ${id} not found` }
+      return { error: `Note with id ${id} not found or you don't have permission to delete it` };
     }
+
     data.notes.splice(index, 1);
     saveDB(data);
-    return { success: true, message: `Note with id ${id} deleted successfully` }
+    return { success: true, message: `Note with id ${id} deleted successfully` };
   } catch (error) {
-    return { error: error.toString() }
+    return { error: error.toString() };
   }
-
 }
 
 
 
 
-function UpdateNoteJsonDB(id, note) {
+function UpdateNoteJsonDB(id, note, userId) {
   try {
-    const parsednotes = LoadDB()
-  
-    const index = parsednotes.notes.findIndex(note => note.id === id);
-    console.log("from UpdateNoteJson parsed editable note",  index)
+    const parsednotes = LoadDB();
 
-    
+    // Make sure we only update notes that belong to the user
+    const index = parsednotes.notes.findIndex(n => n.id === id && n.userId === userId);
+
     if (index === -1) {
-      return { error: `Note with id ${id} not found` }
+      return { error: `Note with id ${id} not found or you don't have permission to update it` };
     }
-    parsednotes.notes[index] = note;
+
+    // Preserve the userId when updating
+    const updatedNote = { ...note, userId };
+    parsednotes.notes[index] = updatedNote;
 
     saveDB(parsednotes);
-    return { success: true, message: `Note with id ${id} updated successfully` }
+    return {
+      success: true,
+      message: `Note with id ${id} updated successfully`,
+      note: updatedNote
+    };
   } catch (error) {
-    return { error: error.toString() }
+    return { error: error.toString() };
   }
-
 }
 
 

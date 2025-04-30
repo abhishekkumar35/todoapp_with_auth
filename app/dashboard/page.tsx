@@ -7,7 +7,7 @@ import NoteList from '@/components/NoteList';
 import ChangeContext from '@/lib/ChangeContextProvider';
 
 export default function Page() {
-    const { status } = useSession({
+    const { data: session, status } = useSession({
         required: true,
         onUnauthenticated() {
             window.location.href = '/auth/signin';
@@ -32,7 +32,7 @@ export default function Page() {
                     <div className="mb-8">
                         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Dashboard</h1>
                         <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-                            Manage your notes and stay organized
+                            Welcome, {session?.user?.name || 'User'}! Manage your notes and stay organized.
                         </p>
                     </div>
 

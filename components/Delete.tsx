@@ -16,8 +16,24 @@ export default function Delete({id}: {id: string}) {
                 body: JSON.stringify({id})
             })
 
-            if(res.ok){
-                console.log("deleted successfully")
+            if (!res.ok) {
+                if (res.status === 401) {
+                    console.error("Unauthorized: You need to be signed in to delete notes")
+                } else {
+                    console.error("Failed to delete note")
+                }
+                return
+            }
+
+            const data = await res.json()
+
+            if (data.error) {
+                console.error("Error:", data.error)
+                return
+            }
+
+            if (data.success) {
+                console.log("Deleted successfully")
                 setChange({del_id: id.toString(), edit_id:id.toString()})
             }
         } catch (error) {

@@ -25,7 +25,30 @@ export default function AddNote({onData}: {onData:(indianTime:string)=>void}) {
                 body: JSON.stringify(noteNewData)
             });
 
-            if (res.ok) {
+            if (!res.ok) {
+                // Handle unauthorized or other errors
+                if (res.status === 401) {
+                    setMessage('You need to be signed in to add notes.');
+                } else {
+                    setMessage('Failed to add note. Please try again.');
+                }
+                setTimeout(() => {
+                    setMessage('');
+                }, 3000);
+                return;
+            }
+
+            const data = await res.json();
+
+            if (data.error) {
+                setMessage(data.error);
+                setTimeout(() => {
+                    setMessage('');
+                }, 3000);
+                return;
+            }
+
+            if (data.success) {
                 setMessage('Note added successfully!');
                 setNote('');
                 setTimeout(() => {
@@ -33,7 +56,7 @@ export default function AddNote({onData}: {onData:(indianTime:string)=>void}) {
                 }, 3000);
                 onData(newTimestamp);
             } else {
-                setMessage('Failed to add note. Please try again.');
+                setMessage(data.message || 'Failed to add note. Please try again.');
                 setTimeout(() => {
                     setMessage('');
                 }, 3000);

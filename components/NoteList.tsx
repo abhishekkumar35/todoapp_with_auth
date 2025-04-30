@@ -18,10 +18,19 @@ export default function NoteList({data}:{data:string}) {
                 const res = await fetch('/api/notes', { method: 'GET' })
 
                 if (!res.ok) {
-                    throw new Error('Failed to fetch notes')
+                    // Handle unauthorized or other errors
+                    if (res.status === 401) {
+                        throw new Error('You need to be signed in to view notes')
+                    } else {
+                        throw new Error('Failed to fetch notes')
+                    }
                 }
 
                 const data = await res.json()
+
+                if (data.error) {
+                    throw new Error(data.error)
+                }
 
                 if (data.notes) {
                     // Sort notes by timestamp, newest first
