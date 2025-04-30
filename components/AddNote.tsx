@@ -3,42 +3,96 @@ import { useState } from 'react';
 export default function AddNote({onData}: {onData:(indianTime:string)=>void}) {
     const [note, setNote] = useState('');
     const [message, setMessage] = useState('');
-    
-   async function handleAddNote(){
-        const newTimestamp = Date.now()
-        const indianTime = new Date(newTimestamp).toLocaleString("en-US", {
-            timeZone: "Asia/Kolkata",
-            hour12: false
-          });
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
-        const noteNewData = {note:note, timestamp:indianTime}
-       const res =  await fetch('/api/notes', {
-            method:'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(noteNewData)
-        })
-        if(res.ok){
-           
-            setMessage('Note Added Successfully')
-            setNote('')
-            setTimeout(()=>{
-                setMessage('')
+    async function handleAddNote() {
+        if (!note.trim()) return;
+
+        try {
+            setIsSubmitting(true);
+            const newTimestamp = new Date().toISOString();
+
+            const noteNewData = {
+                note: note.trim(),
+                timestamp: newTimestamp
+            };
+
+            const res = await fetch('/api/notes', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(noteNewData)
+            });
+
+            if (res.ok) {
+                setMessage('Note added successfully!');
+                setNote('');
+                setTimeout(() => {
+                    setMessage('');
+                }, 3000);
+                onData(newTimestamp);
+            } else {
+                setMessage('Failed to add note. Please try again.');
+                setTimeout(() => {
+                    setMessage('');
+                }, 3000);
             }
-            , 3000)
-            onData(indianTime)
+        } catch (error) {
+            console.error("Error adding note:", error);
+            setMessage('An error occurred. Please try again.');
+            setTimeout(() => {
+                setMessage('');
+            }, 3000);
+        } finally {
+            setIsSubmitting(false);
         }
     }
 
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter' && !isSubmitting) {
+            handleAddNote();
+        }
+    };
 
-    return <div className="flex justify-center w-full m-4">
-        <div className="flex flex-row w-2xl">
-            <div className="flex flex-col w-full border-2 rounded-2xl pt-3.5">
-        <input type='text' placeholder="Add A Note"  className="w-full px-4  rounded-2xl focus:outline-none focus:ring-0" onChange={(e)=>{setNote(e.target.value)}}/>   
+    return (
+        <div className="w-full max-w-3xl mx-auto px-4 py-6">
+            <div className="card p-4 mb-2">
+                <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">Add New Note</h2>
+
+                <div className="flex flex-col sm:flex-row gap-3">
+                    <input
+                        type="text"
+                        placeholder="What's on your mind?"
+                        className="input flex-grow"
+                        value={note}
+                        onChange={(e) => setNote(e.target.value)}
+                        onKeyDown={handleKeyDown}
+                        disabled={isSubmitting}
+                    />
+
+                    <button
+                        className="btn btn-primary flex items-center justify-center min-w-[100px]"
+                        onClick={handleAddNote}
+                        disabled={isSubmitting || !note.trim()}
+                    >
+                        {isSubmitting ? (
+                            <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                        ) : (
+                            <span>Add Note</span>
+                        )}
+                    </button>
+                </div>
+
+                {message && (
+                    <div className={`mt-3 text-sm font-medium ${message.includes('success') ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
+                        {message}
+                    </div>
+                )}
+            </div>
         </div>
-        <button className="p-2 bg-gray-800 rounded m-2 px-14 rounded-2xl text-white" onClick={handleAddNote}>Add</button>
-        </div>
-        <p className='text-emerald-700'>{message}</p>
-    </div>
+    );
 }

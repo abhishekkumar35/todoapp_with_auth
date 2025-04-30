@@ -1,55 +1,106 @@
 "use client";
 import { NoteType } from "@/types";
 import Modal from "./Modal"
-import{useState} from "react"
+import { useState } from "react"
 import { useChange } from "@/hooks/useChange";
-
 
 export default function Edit({id}:{id:string}) {
     const [isModalOpen, setModalOpen] = useState<boolean>(false);
-    const [editableData,setEditableData] = useState<NoteType | null>(null)
-    const {setChange}=useChange();
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isSaving, setIsSaving] = useState<boolean>(false);
+    const [editableData, setEditableData] = useState<NoteType | null>(null);
+    const {setChange} = useChange();
 
+    async function handleOpen() {
+        try {
+            setIsLoading(true);
+            setModalOpen(true);
 
-   async function handleOpen() {
-        setModalOpen(true)
-        const res = await fetch(`/api/notes`,{method:"GET",headers:{"Content-Type":"application/json"}})
-        const data = await res.json()
-        console.log(data)
-        const dataToEdit =  data.notes.filter((note:NoteType)=>{
-            if(note.id === id){
-                return note
+            const res = await fetch(`/api/notes`, {
+                method: "GET",
+                headers: {"Content-Type": "application/json"}
+            });
+
+            const data = await res.json();
+            const dataToEdit = data.notes.find((note: NoteType) => note.id === id);
+
+            setEditableData(dataToEdit || null);
+        } catch (error) {
+            console.error("Error fetching note data:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
+    async function handleClose() {
+        if (!editableData) {
+            setModalOpen(false);
+            return;
+        }
+
+        try {
+            setIsSaving(true);
+
+            const res = await fetch("/api/notes", {
+                method: "PUT",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({id, note: editableData})
+            });
+
+            if (res.ok) {
+                setChange({del_id: '0', edit_id: id});
+                setModalOpen(false);
+            } else {
+                console.error("Failed to update note");
             }
-        })
-        console.log(dataToEdit[0])
-        setEditableData(dataToEdit[0] || null)
-        console.log('Edit button clicked',id)
-
-
-    }
-    async function handleClose(){
-        setModalOpen(false)
-        const res = await fetch("/api/notes",{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({id, note:editableData})})
-        console.log(res)
-        setChange({del_id:'0',edit_id:id})
+        } catch (error) {
+            console.error("Error updating note:", error);
+        } finally {
+            setIsSaving(false);
+        }
     }
 
+    function handleCancel() {
+        setModalOpen(false);
+    }
 
     return (
-            <>
-            <Modal isOpen={isModalOpen} onClose={handleClose} >
-
-
-                <input
-                    type="text" className="p-2 w-full h-24 bg-gray-300 text-black"
-                    value={editableData?.note || ""}
-                    onChange={(e) =>
-                        editableData &&
-                        setEditableData({ ...editableData, note: e.target.value, timestamp: Date.now().toLocaleString() })
-                    }
-                />
+        <>
+            <Modal
+                isOpen={isModalOpen}
+                onClose={handleClose}
+                onCancel={handleCancel}
+                title="Edit Note"
+                isLoading={isLoading}
+                isSaving={isSaving}
+            >
+                {isLoading ? (
+                    <div className="flex justify-center items-center py-8">
+                        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+                    </div>
+                ) : (
+                    <textarea
+                        className="input w-full h-32 resize-none"
+                        value={editableData?.note || ""}
+                        onChange={(e) =>
+                            editableData &&
+                            setEditableData({
+                                ...editableData,
+                                note: e.target.value,
+                                timestamp: new Date().toISOString()
+                            })
+                        }
+                        placeholder="Enter your note here..."
+                    />
+                )}
             </Modal>
-            <button className="p-2 bg-gray-800 rounded m-2 px-14 rounded-2xl text-white" onClick={handleOpen}>Edit</button>
-            </>
-        )
+
+            <button
+                className="btn btn-primary flex items-center justify-center min-w-[80px] mr-2"
+                onClick={handleOpen}
+            >
+                Edit
+            </button>
+        </>
+    );
 }
