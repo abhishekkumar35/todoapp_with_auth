@@ -1,5 +1,5 @@
 import { NextResponse, NextRequest } from "next/server";
-import { AddNoteJsonDB, GetNotesJsonDB, UpdateNoteJsonDB, DeleteNoteJsonDB } from '@/db/db';
+import { AddNoteJsonDB, GetNotesJsonDB, UpdateNoteJsonDB, DeleteNoteJsonDB } from '@/db/prisma-db';
 import { getToken } from "next-auth/jwt";
 
 // Helper function to get the user ID from the session
@@ -19,13 +19,13 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const data = GetNotesJsonDB(userId);
+    const data = await GetNotesJsonDB(userId);
 
     if ('notes' in data) {
         const notes = data.notes;
         return NextResponse.json({ notes });
     } else {
-        return NextResponse.json({ error: data || "Unknown error" });
+        return NextResponse.json({ error: data.error || "Unknown error" });
     }
 }
 
@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
     // Add userId to the note
     const noteWithUser = { ...noteData, userId };
 
-    const response = AddNoteJsonDB(noteWithUser);
+    const response = await AddNoteJsonDB(noteWithUser);
 
     if ('error' in response) {
         return NextResponse.json({ success: false, status: 500, message: response.error });
@@ -67,7 +67,7 @@ export async function DELETE(req: NextRequest) {
     }
 
     const data = await req.json();
-    const res = DeleteNoteJsonDB(data.id, userId);
+    const res = await DeleteNoteJsonDB(data.id, userId);
 
     return NextResponse.json(res);
 }
@@ -82,7 +82,7 @@ export async function PUT(req: NextRequest) {
     const data = await req.json();
     const { id, note } = data;
 
-    const res = UpdateNoteJsonDB(id, note, userId);
+    const res = await UpdateNoteJsonDB(id, note, userId);
 
     return NextResponse.json(res);
 }
