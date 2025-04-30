@@ -8,9 +8,9 @@ import { useChange } from "@/hooks/useChange";
 export default function Edit({id}:{id:string}) {
     const [isModalOpen, setModalOpen] = useState<boolean>(false);
     const [editableData,setEditableData] = useState<NoteType | null>(null)
-    const {change,setChange}=useChange();
-    
-   
+    const {setChange}=useChange();
+
+
    async function handleOpen() {
         setModalOpen(true)
         const res = await fetch(`/api/notes`,{method:"GET",headers:{"Content-Type":"application/json"}})
@@ -23,9 +23,9 @@ export default function Edit({id}:{id:string}) {
         })
         console.log(dataToEdit[0])
         setEditableData(dataToEdit[0] || null)
-        console.log('Edit button clicked',id) 
+        console.log('Edit button clicked',id)
 
-         
+
     }
     async function handleClose(){
         setModalOpen(false)
@@ -34,12 +34,12 @@ export default function Edit({id}:{id:string}) {
         setChange({del_id:'0',edit_id:id})
     }
 
-    
+
     return (
             <>
             <Modal isOpen={isModalOpen} onClose={handleClose} >
-              
-               
+
+
                 <input
                     type="text" className="p-2 w-full h-24 bg-gray-300 text-black"
                     value={editableData?.note || ""}

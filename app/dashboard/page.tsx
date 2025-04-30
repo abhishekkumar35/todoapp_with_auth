@@ -1,7 +1,7 @@
 "use client"
 import { useSession } from 'next-auth/react';
-import { useState, useEffect } from 'react';
-import { ChangeContextType, ChangeType, NoteType } from '@/types';
+import { useState } from 'react';
+import { ChangeType } from '@/types';
 import AddNote from '@/components/AddNote';
 import NoteList from '@/components/NoteList';
 import ChangeContext from '@/lib/ChangeContextProvider';
@@ -9,17 +9,17 @@ import ChangeContext from '@/lib/ChangeContextProvider';
 
 
 export default function Page() {
-    const { data: session, status } = useSession({
+    const { status } = useSession({
         required: true,
         onUnauthenticated() {
             window.location.href = '/auth/signin';
         }
     });
-    
+
     const [noteAdded, setNoteAdded] = useState<string>("")
-   
+
     const [change, setChange] = useState<ChangeType>()
-    
+
 
        if (status === "loading") {
         return (

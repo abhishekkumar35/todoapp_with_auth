@@ -8,7 +8,7 @@ import { useChange } from "@/hooks/useChange"
 export default function NoteList({data}:{data:string}) {
     const {change} = useChange()
     const [notelist, setNoteslist] = useState<NoteType[]>([])
-    const [del_edit_change,setDel_Edit_Change] = useState<{edit_id:string,del_id:string}>()
+
     useEffect(()=>{
       async  function initialize(){
         const res = await fetch('/api/notes', { method:'GET'})
@@ -20,7 +20,7 @@ export default function NoteList({data}:{data:string}) {
      initialize()
 
     },[data,change])
-   
+
     return <div className="flex justify-center">
       <div>
         {notelist.map(note => <Note key={note.id} note={note} />)}

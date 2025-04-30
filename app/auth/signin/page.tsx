@@ -1,8 +1,9 @@
 "use client"
 import { signIn } from "next-auth/react"
 import { useSearchParams } from "next/navigation"
+import { Suspense } from "react"
 
-export default function SignIn() {
+function SignInContent() {
   const searchParams = useSearchParams()
   const callbackUrl = searchParams.get("callbackUrl") || "/dashboard"
 
@@ -21,5 +22,13 @@ export default function SignIn() {
         Sign in with GitHub
       </button>
     </div>
+  )
+}
+
+export default function SignIn() {
+  return (
+    <Suspense fallback={<div className="flex justify-center items-center h-screen">Loading...</div>}>
+      <SignInContent />
+    </Suspense>
   )
 }

@@ -1,6 +1,6 @@
 "use client"
 import Link from 'next/link'
-import { useSession, signOut } from 'next-auth/react'
+import { useSession } from 'next-auth/react'
 
 export default function Navbar() {
     const { data: session, status } = useSession()
@@ -41,7 +41,7 @@ export default function Navbar() {
                                         <span className="p-2">{session.user.name}</span>
                                     )}
                                     <Link href="/auth/signout"
-                                      
+
                                         className="hover:bg-gray-700 rounded p-2"
                                     >
 
