@@ -17,6 +17,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "NotesApp | Simple Note Taking",
   description: "A simple, elegant note-taking application to organize your thoughts",
+  viewport: "width=device-width, initial-scale=1, viewport-fit=cover",
   icons: {
     icon: [
       { url: "/favicon.svg", type: "image/svg+xml" },
@@ -36,10 +37,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <div className="container flex flex-col mx-auto h-screen">
+        <div className="container flex flex-col mx-auto min-h-screen w-full px-0 sm:px-2 md:px-4 overflow-x-hidden">
           <AuthProvider>
             <Navbar />
-            {children}
+            <main className="flex-grow w-full">
+              {children}
+            </main>
           </AuthProvider>
         </div>
       </body>

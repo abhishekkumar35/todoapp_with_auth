@@ -79,15 +79,15 @@ export default function AddNote({onData}: {onData:(indianTime:string)=>void}) {
     };
 
     return (
-        <div className="w-full max-w-3xl mx-auto px-4 py-6">
-            <div className="card p-4 mb-2">
-                <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">Add New Note</h2>
+        <div className="w-full max-w-3xl mx-auto px-3 sm:px-4 py-4 sm:py-6">
+            <div className="card p-3 sm:p-4 mb-2">
+                <h2 className="text-lg sm:text-xl font-semibold text-gray-800 dark:text-white mb-3 sm:mb-4">Add New Note</h2>
 
                 <div className="flex flex-col sm:flex-row gap-3">
                     <input
                         type="text"
                         placeholder="What's on your mind?"
-                        className="input flex-grow"
+                        className="input flex-grow py-2 px-3 sm:px-4 text-base"
                         value={note}
                         onChange={(e) => setNote(e.target.value)}
                         onKeyDown={handleKeyDown}
@@ -95,7 +95,7 @@ export default function AddNote({onData}: {onData:(indianTime:string)=>void}) {
                     />
 
                     <button
-                        className="btn btn-primary flex items-center justify-center min-w-[100px]"
+                        className="btn btn-primary flex items-center justify-center min-w-[100px] py-2 sm:py-2.5 mt-1 sm:mt-0"
                         onClick={handleAddNote}
                         disabled={isSubmitting || !note.trim()}
                     >

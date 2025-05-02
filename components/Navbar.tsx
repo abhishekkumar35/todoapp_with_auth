@@ -13,8 +13,8 @@ export default function Navbar() {
     }
 
     return (
-        <nav className="bg-white dark:bg-gray-800 shadow-md">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <nav className="bg-white dark:bg-gray-800 shadow-md sticky top-0 z-10">
+            <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
                 <div className="flex justify-between h-16">
                     <div className="flex items-center">
                         <Link href="/" className="flex-shrink-0 flex items-center">
@@ -100,46 +100,53 @@ export default function Navbar() {
             </div>
 
             {/* Mobile menu */}
-            <div className={`${isMenuOpen ? 'block' : 'hidden'} md:hidden`}>
-                <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+            <div className={`${isMenuOpen ? 'block' : 'hidden'} md:hidden absolute w-full bg-white dark:bg-gray-800 shadow-lg z-20`}>
+                <div className="px-3 pt-2 pb-4 space-y-2 sm:px-4">
                     <Link
                         href="/dashboard"
-                        className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-700"
+                        className="block px-4 py-3 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                        onClick={() => setIsMenuOpen(false)}
                     >
                         Dashboard
                     </Link>
                     <Link
                         href="/princing"
-                        className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-700"
+                        className="block px-4 py-3 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                        onClick={() => setIsMenuOpen(false)}
                     >
                         Pricing
                     </Link>
                     <Link
                         href="/about"
-                        className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-700"
+                        className="block px-4 py-3 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                        onClick={() => setIsMenuOpen(false)}
                     >
                         About
                     </Link>
 
                     {status === 'authenticated' ? (
-                        <div className="space-y-2 pt-2">
-                            <div className="px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-700">
+                        <div className="space-y-3 pt-2 border-t border-gray-200 dark:border-gray-700 mt-3">
+                            <div className="px-4 py-3 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-700">
                                 {session?.user?.name}
                             </div>
                             <Link
                                 href="/auth/signout"
-                                className="block w-full px-3 py-2 rounded-md text-base font-medium text-center text-white bg-blue-600 hover:bg-blue-700"
+                                className="block w-full px-4 py-3 rounded-md text-base font-medium text-center text-white bg-blue-600 hover:bg-blue-700 transition-colors"
+                                onClick={() => setIsMenuOpen(false)}
                             >
                                 Sign out
                             </Link>
                         </div>
                     ) : (
-                        <Link
-                            href="/auth/signin"
-                            className="block w-full mt-2 px-3 py-2 rounded-md text-base font-medium text-center text-white bg-blue-600 hover:bg-blue-700"
-                        >
-                            Sign in
-                        </Link>
+                        <div className="border-t border-gray-200 dark:border-gray-700 mt-3 pt-3">
+                            <Link
+                                href="/auth/signin"
+                                className="block w-full px-4 py-3 rounded-md text-base font-medium text-center text-white bg-blue-600 hover:bg-blue-700 transition-colors"
+                                onClick={() => setIsMenuOpen(false)}
+                            >
+                                Sign in
+                            </Link>
+                        </div>
                     )}
                 </div>
             </div>

@@ -127,8 +127,9 @@ export default function Edit({id}:{id:string}) {
             </Modal>
 
             <button
-                className="btn btn-primary flex items-center justify-center min-w-[80px] mr-2"
+                className="btn btn-primary flex items-center justify-center min-w-[70px] sm:min-w-[80px] text-sm sm:text-base py-1.5 sm:py-2 mr-2"
                 onClick={handleOpen}
+                aria-label="Edit note"
             >
                 Edit
             </button>

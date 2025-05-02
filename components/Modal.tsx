@@ -31,15 +31,16 @@ export default function Modal({
     }
 
     return createPortal(
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md relative animate-fadeIn">
-                <div className="p-6">
-                    <div className="flex justify-between items-center mb-4">
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-3 sm:p-4">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md relative animate-fadeIn max-h-[90vh] overflow-auto">
+                <div className="p-4 sm:p-6">
+                    <div className="flex justify-between items-center mb-3 sm:mb-4">
                         <h3 className="text-lg font-medium text-gray-900 dark:text-white">{title}</h3>
                         {onCancel && (
                             <button
                                 onClick={onCancel}
-                                className="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300 focus:outline-none"
+                                className="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300 focus:outline-none p-1"
+                                aria-label="Close modal"
                             >
                                 <span className="sr-only">Close</span>
                                 <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -53,10 +54,10 @@ export default function Modal({
                         {children}
                     </div>
 
-                    <div className="mt-6 flex justify-end space-x-3">
+                    <div className="mt-5 sm:mt-6 flex flex-col sm:flex-row justify-end sm:space-x-3 space-y-2 sm:space-y-0">
                         {onCancel && (
                             <button
-                                className="btn btn-secondary"
+                                className="btn btn-secondary w-full sm:w-auto order-2 sm:order-1"
                                 onClick={onCancel}
                                 disabled={isLoading || isSaving}
                             >
@@ -64,7 +65,7 @@ export default function Modal({
                             </button>
                         )}
                         <button
-                            className="btn btn-primary flex items-center justify-center min-w-[80px]"
+                            className="btn btn-primary flex items-center justify-center min-w-[80px] w-full sm:w-auto order-1 sm:order-2"
                             onClick={onClose}
                             disabled={isLoading || isSaving}
                         >

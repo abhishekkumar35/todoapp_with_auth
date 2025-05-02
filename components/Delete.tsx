@@ -45,9 +45,10 @@ export default function Delete({id}: {id: string}) {
 
     return (
         <button
-            className="btn btn-danger flex items-center justify-center min-w-[80px]"
+            className="btn btn-danger flex items-center justify-center min-w-[70px] sm:min-w-[80px] text-sm sm:text-base py-1.5 sm:py-2"
             onClick={() => handleDelete(id)}
             disabled={isDeleting}
+            aria-label="Delete note"
         >
             {isDeleting ? (
                 <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
